@@ -1,0 +1,34 @@
+{
+  "name": "aodi",
+  "version": "0.1.0",
+  "description": "Another one Dependency Injection",
+  "main": "index.js",
+  "scripts": {
+    "test": "export UNDER_NODE_BABEL=1; ./node_modules/nyc/bin/nyc.js --include \"src/**/*.js\" --exclude \"**/*.spec.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/**/*.spec.js\" --reporter spec",
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "coverage": "export UNDER_NODE_BABEL=1; ./node_modules/nyc/bin/nyc.js report --reporter=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PinkaminaDianePie/aodi.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PinkaminaDianePie/aodi/issues"
+  },
+  "homepage": "https://github.com/PinkaminaDianePie/aodi#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0"
+  }
+}
