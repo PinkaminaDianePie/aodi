@@ -51,4 +51,4 @@ typings/
 # dotenv environment variables file
 .env
 
-lib
+dist

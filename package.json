@@ -2,11 +2,20 @@
   "name": "aodi",
   "version": "0.1.0",
   "description": "Another one Dependency Injection",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "export UNDER_NODE_BABEL=1; ./node_modules/nyc/bin/nyc.js --include \"src/**/*.js\" --exclude \"**/*.spec.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/**/*.spec.js\" --reporter spec",
-    "build": "./node_modules/.bin/babel src --out-dir lib",
-    "coverage": "export UNDER_NODE_BABEL=1; ./node_modules/nyc/bin/nyc.js report --reporter=lcov"
+    "clean": "rm -rf dist && mkdir dist",
+    "lint": "./node_modules/eslint/bin/eslint.js src",
+    "test": "./node_modules/nyc/bin/nyc.js --include \"src/**/*.js\" --exclude \"**/*.spec.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/**/*.spec.js\" --reporter spec",
+    "test-inject": "./node_modules/nyc/bin/nyc.js --include \"src/inject.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/inject.spec.js\" --reporter spec",
+    "test-injector": "./node_modules/nyc/bin/nyc.js --include \"src/injector.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/injector.spec.js\" --reporter spec",
+    "test-provider": "./node_modules/nyc/bin/nyc.js --include \"src/provider.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/provider.spec.js\" --reporter spec",
+    "test-token": "./node_modules/nyc/bin/nyc.js --include \"src/token.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/token.spec.js\" --reporter spec",
+    "test-utils": "./node_modules/nyc/bin/nyc.js --include \"src/utils.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/utils.spec.js\" --reporter spec",
+    "test-all": "npm run test-inject && npm run test-injector && npm run test-provider && npm run test-token && npm run test-utils && npm run lint",
+    "build": "npm run clean && BABEL_ENV=production ./node_modules/.bin/babel src --ignore '**/*.spec.js' --out-file dist/index.js -s",
+    "coverage": "npm test && ./node_modules/nyc/bin/nyc.js report --reporter=lcov",
+    "flow": "./node_modules/flow-bin/cli.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +29,7 @@
   "homepage": "https://github.com/PinkaminaDianePie/aodi#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -27,8 +37,13 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
+    "eslint": "^4.12.0",
     "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.8.0",
+    "flow-bin": "^0.59.0",
     "mocha": "^4.0.1",
-    "nyc": "^11.3.0"
+    "nyc": "^11.3.0",
+    "webpack": "^3.8.1"
   }
 }
