@@ -4,7 +4,6 @@
   "description": "Another one Dependency Injection",
   "main": "src/index.js",
   "scripts": {
-    "clean": "rm -rf dist && mkdir dist",
     "lint": "./node_modules/eslint/bin/eslint.js src",
     "test": "./node_modules/nyc/bin/nyc.js --include \"src/**/*.js\" --exclude \"**/*.spec.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/**/*.spec.js\" --reporter spec",
     "test-inject": "./node_modules/nyc/bin/nyc.js --include \"src/inject.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/inject.spec.js\" --reporter spec",
@@ -13,7 +12,7 @@
     "test-token": "./node_modules/nyc/bin/nyc.js --include \"src/token.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/token.spec.js\" --reporter spec",
     "test-utils": "./node_modules/nyc/bin/nyc.js --include \"src/utils.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/utils.spec.js\" --reporter spec",
     "test-all": "npm run test-inject && npm run test-injector && npm run test-provider && npm run test-token && npm run test-utils && npm run lint",
-    "build": "npm run clean && BABEL_ENV=production ./node_modules/.bin/babel src --ignore '**/*.spec.js' --out-file dist/index.js -s",
+    "build": "webpack --config webpack.prod.js",
     "coverage": "npm test && ./node_modules/nyc/bin/nyc.js report --reporter=lcov",
     "flow": "./node_modules/flow-bin/cli.js"
   },
@@ -30,6 +29,8 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-loader": "^7.1.2",
+    "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",

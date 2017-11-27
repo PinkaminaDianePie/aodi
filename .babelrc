@@ -4,10 +4,5 @@
       "node": "6.10"
     }
   }], "babel-preset-flow"],
-  "plugins": ["transform-object-rest-spread", "transform-class-properties"],
-  "env": {
-    "production": {
-      "presets": ["minify"]
-    }
-  }
+  "plugins": ["transform-object-rest-spread", "transform-class-properties"]
 }
