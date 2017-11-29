@@ -1,7 +1,7 @@
 // @flow
 import { annotate, getMetadata } from './utils';
 import { DEPENDENCIES } from './constants';
-import type { DescriptorProperty, Decorator, Injectable } from './decorator.types';
+import type { DescriptorProperty, DecoratorProperty, Injectable } from './decorator.types';
 import Token from './token';
 
 /**
@@ -32,7 +32,7 @@ function ensureMetadata(target: Object): Object[] {
  * @param  {Token|class} dependency dependency which will be injected to annotated field
  * @return {Function} decorator to annotate class field
  */
-export function inject(dependency: Injectable): Decorator<DescriptorProperty> {
+export function inject(dependency: Injectable): DecoratorProperty {
   if (!Token.isInjectable(dependency)) {
     throw new Error(`Unable to inject dependency ${String(dependency)}, it should be a class or instanceof Token.`);
   }

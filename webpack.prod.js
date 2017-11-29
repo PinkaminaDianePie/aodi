@@ -4,8 +4,10 @@ const MinifyPlugin = require('babel-minify-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'aodi.js',
+    library: 'aodi',
     path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'umd',
   },
   plugins: [
     new MinifyPlugin(),

@@ -2,7 +2,7 @@
   "name": "aodi",
   "version": "0.1.0",
   "description": "Another one Dependency Injection",
-  "main": "src/index.js",
+  "main": "dist/aodi.js",
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js src",
     "test": "./node_modules/nyc/bin/nyc.js --include \"src/**/*.js\" --exclude \"**/*.spec.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/**/*.spec.js\" --reporter spec",
@@ -12,14 +12,23 @@
     "test-token": "./node_modules/nyc/bin/nyc.js --include \"src/token.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/token.spec.js\" --reporter spec",
     "test-utils": "./node_modules/nyc/bin/nyc.js --include \"src/utils.js\" --require babel-register --require babel-polyfill ./node_modules/mocha/bin/_mocha \"src/utils.spec.js\" --reporter spec",
     "test-all": "npm run test-inject && npm run test-injector && npm run test-provider && npm run test-token && npm run test-utils && npm run lint",
-    "build": "webpack --config webpack.prod.js",
-    "coverage": "npm test && ./node_modules/nyc/bin/nyc.js report --reporter=lcov",
-    "flow": "./node_modules/flow-bin/cli.js"
+    "build": "webpack --config webpack.prod.js && npm run flow-gen",
+    "coverage": "./node_modules/nyc/bin/nyc.js report --reporter=lcov",
+    "flow": "./node_modules/flow-bin/cli.js",
+    "flow-gen": "./node_modules/flow-bin/cli.js gen-flow-files src/index.js > dist/aodi.js.flow"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PinkaminaDianePie/aodi.git"
   },
+  "keywords": [
+    "ioc",
+    "di",
+    "dependency injection",
+    "dependency inversion",
+    "inversion of control",
+    "flow"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {

@@ -8,8 +8,6 @@ install:
   - npm install codacy-coverage
   - npm install mocha-lcov-reporter
   - npm install
-  - npm link
-  - npm link planck
-script: "npm test; npm run-script coverage"
+script: "npm run test-all; npm run coverage"
 after_script:
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js;"

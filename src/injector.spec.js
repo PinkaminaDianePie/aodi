@@ -43,6 +43,11 @@ describe('Injector', () => {
   });
 
   describe('provider', () => {
+    it('Should throw if provided parameter doesn\'t has proper metadata', () => {
+      const injector = new Injector();
+      (() => { injector.provider({}); }).should.throw();
+    });
+
     it('Should provide dependencies for direct instantiating, added to its metadata', async () => {
       const token = new Token();
       function Bar() {}

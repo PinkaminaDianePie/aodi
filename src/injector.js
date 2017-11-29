@@ -48,14 +48,12 @@ class Injector {
     }
     [...metadata.entries()].map(([key, { token, dependencies, singleton }]) => {
       const result: ProvideDescriptor = { dependencies, singleton };
-      if (typeof provider[key] === 'function') {
-        if (typeof proto[key] === 'function') {
-          result.factory = provider[key].bind(provider);
-        } else {
-          result.module = provider[key];
-        }
-      } else {
+      if (typeof provider[key] !== 'function') {
         result.value = provider[key];
+      } else if (typeof proto[key] === 'function') {
+        result.factory = provider[key].bind(provider);
+      } else {
+        result.module = provider[key];
       }
       return [token, result];
     }).forEach(([token, payload]) => this.provide(token, payload));
@@ -80,8 +78,8 @@ class Injector {
       factory,
       module,
       singleton,
+      value,
     } = provider;
-    let { value } = provider;
     if (typeof value !== 'undefined') {
       return value;
     }
@@ -94,15 +92,7 @@ class Injector {
       resolvedDependency = await this.create(module);
     }
     if (singleton) {
-      value = resolvedDependency;
-      // $BugInFlow
-      this[PROVIDERS].set(token, {
-        dependencies,
-        value,
-        factory,
-        module,
-        singleton,
-      });
+      provider.value = resolvedDependency;
     }
     return resolvedDependency;
   }

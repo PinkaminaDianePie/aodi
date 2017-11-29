@@ -3,5 +3,12 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0887c585a0337f498016/maintainability)](https://codeclimate.com/github/PinkaminaDianePie/aodi/maintainability)
 [![codebeat badge](https://codebeat.co/badges/79f4cc62-2145-4816-87ec-59631cc98533)](https://codebeat.co/projects/github-com-pinkaminadianepie-aodi-master)
 
+AODI is a IoC container for JS apps. Works both on browser and Node.JS. Compatible with [Flow](https://flow.org)
+
+## Installation
+```
+$ npm install aodi --save
+```
+
 ## License
 [MIT](LICENSE)

@@ -1,7 +1,7 @@
 // @flow
 import { getMetadata, annotate, ensureMapEntry } from './utils';
 import { DI_METADATA } from './constants';
-import type { Descriptor, DescriptorMethod, Decorator, Injectable } from './decorator.types';
+import type { Descriptor, DescriptorMethod, Decorator, DecoratorMethod, Injectable } from './decorator.types';
 import Token from './token';
 
 /**
@@ -28,7 +28,7 @@ export function ensureProviderMetadataEntry(providerPrototype: Object, key: stri
  * @param  {Token|Function} token token to be provided by method
  * @return {Decorator} decorator function which can be applied to method or field only
  */
-export function provides(token: Injectable): Decorator<Descriptor> {
+export function provides(token: Injectable): Decorator {
   if (!Token.isInjectable(token)) {
     throw new Error(`Unable to provide dependency ${String(token)}, it should be a class or instanceof Token.`);
   }
@@ -62,9 +62,9 @@ export function singleton(
  * Annotates provider method with dependencies list. When this method will be invoked, dependencies
  * list will be resolved by DI mechanism and passed as method parameters.
  * @param  {...Function|Object} dependenciesList dependencies to inject
- * @return {Decorator} decorator function which can be applied to method only
+ * @return {DecoratorMethod} decorator function which can be applied to method only
  */
-export function dependencies(...dependenciesList: Array<Injectable>): Decorator<DescriptorMethod> {
+export function dependencies(...dependenciesList: Array<Injectable>): DecoratorMethod {
   if (!dependenciesList.length) {
     throw new Error('Dependencies list for @dependencies decorator should not be empty');
   }

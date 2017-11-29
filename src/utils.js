@@ -32,8 +32,7 @@ export function iterateToInheritanceRoot(childClass: Function) {
   if (typeof childClass !== 'function') {
     throw new TypeError('Target for iterate should be a function');
   }
-  // eslint-disable-next-line no-undef
-  function* iterate(target: Function): Generator<Function, void, void> {
+  function* iterate(target: Function): any {
     const parent = Reflect.getPrototypeOf(target);
     yield target;
     if (typeof target === 'function' && parent && parent.prototype) {

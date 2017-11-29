@@ -17,11 +17,23 @@ export type DescriptorProperty = {
 
 export type Descriptor = DescriptorMethod | DescriptorProperty;
 
-export type Decorator<T = Descriptor> = (
+export type Decorator = (
   target: Object | Function,
   key: string,
-  descriptor: T
-) => void | T;
+  descriptor: DescriptorMethod | DescriptorProperty
+) => void | DescriptorMethod | DescriptorProperty;
+
+export type DecoratorMethod = (
+  target: Object | Function,
+  key: string,
+  descriptor: DescriptorMethod
+) => void | DescriptorMethod;
+
+export type DecoratorProperty = (
+  target: Object | Function,
+  key: string,
+  descriptor: DescriptorProperty
+) => void | DescriptorProperty;
 
 export type Injectable = Token<any> | Function;
 

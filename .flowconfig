@@ -1,2 +1,4 @@
 [options]
 suppress_comment= \\(.\\|\n\\)*\\$BugInFlow
+[ignore]
+<PROJECT_ROOT>/dist/.*
