@@ -1,8 +1,8 @@
 dist: trusty
 sudo: required
+language: node_js
 node_js:
   - "8"
-language: javascript
 install:
   - npm install coveralls
   - npm install codeclimate-test-reporter

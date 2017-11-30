@@ -37,6 +37,17 @@ export type DecoratorProperty = (
 
 export type Injectable = Token<any> | Function;
 
+export type Provider = Function | (({
+  value: any;
+} | {
+  module : Function;
+  singleton?: boolean;
+} | {
+  factory: Function;
+  dependencies?: any[];
+  singleton?: boolean;
+}));
+
 export type ProvideDescriptor = {
   dependencies: any[],
   factory?: Function,

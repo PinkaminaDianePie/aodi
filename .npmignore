@@ -8,3 +8,4 @@ src
 .travis.yml
 package-lock.json
 webpack.prod.js
+coverage

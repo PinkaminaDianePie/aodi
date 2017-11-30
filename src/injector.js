@@ -1,30 +1,34 @@
 // @flow
 import { getMetadata, iterateToInheritanceRoot } from './utils';
 import { DEPENDENCIES, DI_METADATA, PROVIDERS } from './constants';
-import type { ProvideDescriptor } from './decorator.types';
+import type { ProvideDescriptor, Injectable, Provider } from './decorator.types';
 
 import Token from './token';
 
-type Provider = Function | (({
-  value: any;
-} | {
-  module : Function;
-  singleton?: boolean;
-} | {
-  factory: Function;
-  dependencies?: any[];
-  singleton?: boolean;
-}));
-
 function isConstructorExists(target: Function) {
   return [...iterateToInheritanceRoot(target)].find(el => el.length);
+}
+
+function getProvider(injector, token): ProvideDescriptor {
+  // $BugInFlow
+  const provider = injector[PROVIDERS].get(token);
+  if (typeof provider === 'undefined') {
+    throw new Error(`Unable to provide dependency ${String(token)}: provider not found`);
+  }
+  return provider;
+}
+
+async function resolveFactory(injector, factory, dependencies) {
+  const paramsDependencies = await Promise
+    .all(dependencies.map(el => injector.resolveDependency(el)));
+  return factory(...paramsDependencies);
 }
 
 class Injector {
   // $BugInFlow
   [PROVIDERS] = new Map();
 
-  provide<T>(token: Token<T> | Function, provider?: Provider): Injector {
+  provide(token: Injectable, provider?: Provider): Injector {
     let providerData = provider;
     if (typeof provider === 'function') {
       providerData = { module: provider };
@@ -67,12 +71,8 @@ class Injector {
     return Object.assign({}, ...resolvedDependencies);
   }
 
-  async resolveDependency<T>(token: Token<T> | Function) {
-    // $BugInFlow
-    const provider = this[PROVIDERS].get(token);
-    if (typeof provider === 'undefined') {
-      throw new Error(`Unable to provide dependency ${String(token)}: provider not found`);
-    }
+  async resolveDependency<T>(token: Token<T> | Function): Promise<T> {
+    const provider = getProvider(this, token);
     const {
       dependencies = [],
       factory,
@@ -84,16 +84,16 @@ class Injector {
       return value;
     }
     let resolvedDependency: T;
-    if (typeof factory === 'function') {
-      const paramsDependencies = await Promise
-        .all(dependencies.map(el => this.resolveDependency(el)));
-      resolvedDependency = factory(...paramsDependencies);
-    } else {
+    if (typeof factory !== 'undefined') {
+      resolvedDependency = await resolveFactory(this, factory, dependencies);
+    }
+    if (typeof module !== 'undefined') {
       resolvedDependency = await this.create(module);
     }
     if (singleton) {
       provider.value = resolvedDependency;
     }
+    // $BugInFlow
     return resolvedDependency;
   }
 
