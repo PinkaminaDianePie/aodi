@@ -9,3 +9,4 @@ src
 package-lock.json
 webpack.prod.js
 coverage
+util

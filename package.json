@@ -15,7 +15,8 @@
     "build": "webpack --config webpack.prod.js && npm run flow-gen",
     "coverage": "./node_modules/nyc/bin/nyc.js report --reporter=lcov",
     "flow": "./node_modules/flow-bin/cli.js",
-    "flow-gen": "./node_modules/flow-bin/cli.js gen-flow-files src/index.js > dist/aodi.js.flow"
+    "flow-gen": "./node_modules/flow-bin/cli.js gen-flow-files src/index.js > dist/aodi.js.flow",
+    "documentation": "./node_modules/documentation/bin/documentation.js build src/index.js -f md -o documentation.md && node util/strip-comments.js documentation.md"
   },
   "repository": {
     "type": "git",
@@ -51,9 +52,12 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-import": "^2.8.0",
-    "flow-bin": "^0.59.0",
+    "flow-bin": "^0.61.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "webpack": "^3.8.1"
+  },
+  "dependencies": {
+    "documentation": "^5.3.3"
   }
 }

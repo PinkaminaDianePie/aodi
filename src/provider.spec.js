@@ -7,6 +7,11 @@ import { DI_METADATA } from './constants';
 const should = chai.should();
 chai.use(chaiSubset);
 
+const shoudReturnFunction = method => () => {
+  method(class Foo {}).should.be.a('function');
+  method(new Token()).should.be.a('function');
+};
+
 describe('Provider', () => {
   describe('ensureProviderMetadataEntry', () => {
     it('Should add Map with empty entry for metadata in object without it', () => {
@@ -38,10 +43,7 @@ describe('Provider', () => {
       (() => { provides({}); }).should.throw();
     });
 
-    it('Should return decorator function for passed functions or DI tokens', () => {
-      provides(class C {}).should.be.a('function');
-      provides(new Token()).should.be.a('function');
-    });
+    it('Should return decorator function for passed functions or DI tokens', shoudReturnFunction(provides));
 
     it('Should annotate target by DI_METADATA Symbol and add entry with token and key of method in class', () => {
       const token = new Token();
@@ -86,10 +88,7 @@ describe('Provider', () => {
       (() => { dependencies(Symbol({})); }).should.throw();
     });
 
-    it('Should return decorator function for passed functions or DI tokens', () => {
-      dependencies(class Foo {}).should.be.a('function');
-      dependencies(new Token()).should.be.a('function');
-    });
+    it('Should return decorator function for passed functions or DI tokens', shoudReturnFunction(dependencies));
 
     it('Should annotate target by DI_METADATA Symbol and add entry with list of dependencies', () => {
       const token = new Token();

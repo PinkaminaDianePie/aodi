@@ -7,6 +7,10 @@ import Token from './token';
 const should = chai.should();
 chai.use(chaiSubset);
 
+const findDep = (target, depKey, token) => target.prototype[DEPENDENCIES]
+  .find(({ key }) => key === depKey)
+  .should.be.deep.equal({ key: depKey, token });
+
 describe('@inject', () => {
   it('Should throw if receive not a DI token or function as parameter', () => {
     (() => inject()).should.throw();
@@ -37,9 +41,7 @@ describe('@inject', () => {
       const KEY = 'bar';
       injectApplicator(Foo.prototype, KEY, {});
       should.exist(Foo.prototype[DEPENDENCIES]);
-      Foo.prototype[DEPENDENCIES]
-        .find(({ key }) => key === KEY)
-        .should.be.deep.equal({ key: KEY, token });
+      findDep(Foo, KEY, token);
     });
 
     it('should annotate prototype of target by add dependency and key to existed dependencies', () => {
@@ -50,12 +52,8 @@ describe('@inject', () => {
       inject(otherToken)(Foo.prototype, KEY_BAR, {});
       injectApplicator(Foo.prototype, KEY_BAZ, {});
       should.exist(Foo.prototype[DEPENDENCIES]);
-      Foo.prototype[DEPENDENCIES]
-        .find(({ key }) => key === KEY_BAR)
-        .should.be.deep.equal({ key: KEY_BAR, token });
-      Foo.prototype[DEPENDENCIES]
-        .find(({ key }) => key === KEY_BAZ)
-        .should.be.deep.equal({ key: KEY_BAZ, token: otherToken });
+      findDep(Foo, KEY_BAR, token);
+      findDep(Foo, KEY_BAZ, otherToken);
     });
   });
 });

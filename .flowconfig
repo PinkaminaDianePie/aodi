@@ -2,3 +2,4 @@
 suppress_comment= \\(.\\|\n\\)*\\$BugInFlow
 [ignore]
 <PROJECT_ROOT>/dist/.*
+<PROJECT_ROOT>/node_modules/documentation/__tests__/fixture/config-malformed.json

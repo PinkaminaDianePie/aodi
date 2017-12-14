@@ -28,8 +28,42 @@ function ensureMetadata(target: Object): Object[] {
  * in first param, so it can be used in constructor. Params for parent class are also included. If
  * class has no constructor at all - resolved dependency will be assigned to class instance by
  * Object.assign().
+ *
+ * @example
+ * // ES6+ way
+ * import { inject, Token } from 'aodi';
+ *
+ * const MyDependencyToken = new Token();
+ * class C{
+ *   __strip__@inject(MyDependencyToken) foo;
+ * }
+ *
+ * @example
+ * // Flow way
+ * import { inject, Token } from 'aodi';
+ *
+ * interface Dep {};
+ *
+ * const MyDependencyToken: Token<Dep> = new Token();
+ * class C{
+ *   __strip__@inject(MyDependencyToken) foo: Dep;
+ * }
+ *
+ * @example
+ * // Example of usage in constructor
+ * import { inject, Token } from 'aodi';
+ *
+ * const MyDependencyToken = new Token();
+ * class C{
+ *   __strip__@inject(MyDependencyToken) foo;
+ *   constructor({ foo }) {
+ *     // foo is available as a property of params object.
+ *   }
+ * }
+ *
  * @memberof DependencyInjection
- * @param  {Token|class} dependency dependency which will be injected to annotated field
+ * @template T
+ * @param  {Token<T>|Function} dependency dependency which will be injected to annotated field
  * @return {Function} decorator to annotate class field
  */
 export function inject(dependency: Injectable): DecoratorProperty {
@@ -49,8 +83,34 @@ export function inject(dependency: Injectable): DecoratorProperty {
 
 /**
  * Marks class a injectable. If class use @inject decorators it will be annotated automatically, so
- * it's only mandatory to mark child classes without any @inject to be able to be able to use
- * dependencies provided by parent, but you can mark all classes which uses DI just to be sure.
+ * it's only mandatory to mark child classes without any @inject to be able to use dependencies
+ * provided by parent. You can still mark all classes which uses DI for consistency.
+ *
+ * @example
+ * import { injectable, inject, Token } from 'aodi';
+ *
+ * const MyDependencyToken = new Token();
+ * __strip__@injectable //not necessary here, because we already used @inject
+ * class C{
+ *   __strip__@inject(MyDependencyToken) foo;
+ * }
+ *
+ * @example
+ * import { injectable, inject, Token } from 'aodi';
+ *
+ * const MyDependencyToken = new Token();
+ * class Foo {
+ *   __strip__@inject(MyDependencyToken) foo;
+ * }
+ *
+ * __strip__@injectable //necessary, DI should know about parent's params before instantiating Foo
+ * class Bar extends Foo {
+ *   bar() {
+ *     this.foo; //it will be available in child because parent asked this dependency
+ *   }
+ * }
+ *
+ * @memberof DependencyInjection
  * @param  {Class} target class to annotate
  * @return {Class} annotated class
  */

@@ -1,6 +1,6 @@
 // @flow
 /**
- * Provides utilities for injecting dependencies and performing IoC
+ * Provides decorator utilities for injecting dependencies into user classes
  * @module DependencyInjection
  */
 export { inject, injectable } from './inject';

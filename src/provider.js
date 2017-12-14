@@ -5,11 +5,17 @@ import type { Descriptor, DescriptorMethod, Decorator, DecoratorMethod, Injectab
 import Token from './token';
 
 /**
+ * Provides utilities for injecting dependencies and performing IoC
+ * @module Provider
+ */
+
+/**
  * Returnes metadata from provider's prototype located by DI_METADATA Symbol, if such metadata does
  * not exists - creates it and return after that.
  * @private
+ * @memberof Provider
  * @param  {Object} providerPrototype prototype of provider, where metadata is located
- * @return {Map<string, Object>} existed or created metadata entry
+ * @return {Map.<string, Object>} existed or created metadata entry
  */
 export function ensureProviderMetadataEntry(providerPrototype: Object, key: string) {
   let metadata = getMetadata(providerPrototype, DI_METADATA);
@@ -22,10 +28,38 @@ export function ensureProviderMetadataEntry(providerPrototype: Object, key: stri
 }
 
 /**
- * Annotates provider to be responsible for provide passed DI token. After that DI system will know
- * that this method should be called when any module will ask dependency, associated with this DI
- * token.
- * @param  {Token|Function} token token to be provided by method
+ * Annotates provider to be responsible for provide dependency for passed DI token. After that DI
+ * system will know that this method should be called when any module will ask dependency,
+ * associated with this token. It is also possible to annotate class field, in that case value of
+ * field will be used as resolved dependency. You can choose any name for method/field, DI does not
+ * use it, only annotations and value are important.
+ *
+ * @example
+ * // you can provide both value as class field or return it from factory method
+ * import { Injector, Token, provides } from 'aodi';
+ *
+ * const MyToken = new Token();
+ * const MyOtherToken = new Token();
+ *
+ * const injector = new Injector();
+ *
+ * class MyProvider {
+ *   __strip__@provides(MyToken)
+ *   foo = 'foo';
+ *
+ *   __strip__@provides(MyOtherToken)
+ *   bar() {
+ *     return 'bar';
+ *   }
+ * }
+ *
+ * // you can call code below inside of async function or use promises
+ * const myToken = injector.get(MyToken); // 'foo'
+ * const myOtherToken = injector.get(MyOtherToken); // 'bar'
+ *
+ * @memberof Provider
+ * @template T
+ * @param  {Token<T>|Function} token token to be provided by method
  * @return {Decorator} decorator function which can be applied to method or field only
  */
 export function provides(token: Injectable): Decorator {
@@ -46,6 +80,29 @@ export function provides(token: Injectable): Decorator {
 /**
  * Annotates provider method as a singleton. Annotated method will be called only once, returned
  * value will be cached and returned on all further method calls.
+ *
+ * @example
+ * // you can see that singleton returns same data every time
+ * import { Injector, Token, provides, singleton } from 'aodi';
+ *
+ * const MyToken = new Token();
+ *
+ * const injector = new Injector();
+ *
+ * class MyProvider {
+ *   __strip__@provides(MyToken)
+ *   __strip__@singleton
+ *   foo() {
+ *     return Symbol('foo');
+ *   }
+ * }
+ *
+ * injector.provider(MyProvider);
+ *
+ * // you can call code below inside of async function or use promises
+ * await injector.get(MyToken) === await injector.get(MyToken) // true
+ *
+ * @memberof Provider
  * @return {DescriptorMethod}  decorated method descriptor
  */
 export function singleton(
@@ -61,8 +118,35 @@ export function singleton(
 /**
  * Annotates provider method with dependencies list. When this method will be invoked, dependencies
  * list will be resolved by DI mechanism and passed as method parameters.
- * @param  {...Function|Object} dependenciesList dependencies to inject
- * @return {DecoratorMethod} decorator function which can be applied to method only
+ *
+ * @example
+ * // you can see that singleton returns same data every time
+ * import { Injector, Token, provides, dependencies } from 'aodi';
+ *
+ * const MyToken = new Token();
+ * const MyOtherToken = new Token();
+ *
+ * const injector = new Injector();
+ *
+ * class MyProvider {
+ *   __strip__@provides(MyOtherToken)
+ *   foo = 'foo';
+ *
+ *   __strip__@provides(MyToken)
+ *   __strip__@dependencies(MyOtherToken)
+ *   bar(otherToken) {
+ *     return otherToken + 'bar';
+ *   }
+ * }
+ *
+ * injector.provider(MyProvider);
+ *
+ * // you can call code below inside of async function or use promises
+ * const myToken = await injector.get(MyToken); // 'foobar';
+ *
+ * @memberof Provider
+ * @param  {...Token} dependenciesList dependencies to inject
+ * @return {Function} decorator function which can be applied to method only
  */
 export function dependencies(...dependenciesList: Array<Injectable>): DecoratorMethod {
   if (!dependenciesList.length) {

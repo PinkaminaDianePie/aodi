@@ -9,6 +9,16 @@ chai.should();
 chai.use(chaiAsPromised);
 chai.use(chaiSubset);
 
+const checkFunctionOrToken = async (method) => {
+  await (new Injector()[method](true)).should.be.rejected;
+  await (new Injector()[method]('foo')).should.be.rejected;
+  await (new Injector()[method](123)).should.be.rejected;
+  await (new Injector()[method](null)).should.be.rejected;
+  await (new Injector()[method](undefined)).should.be.rejected;
+  await (new Injector()[method](Symbol('foo'))).should.be.rejected;
+  await (new Injector()[method]({})).should.be.rejected;
+};
+
 describe('Injector', () => {
   describe('provide', () => {
     it('Should accept function as short-hand for providing instance, constructed by this function', () => {
@@ -142,13 +152,7 @@ describe('Injector', () => {
     });
 
     it('Should reject if provided parameter is not a function or Token', async () => {
-      await (new Injector().get(true)).should.be.rejected;
-      await (new Injector().get('foo')).should.be.rejected;
-      await (new Injector().get(123)).should.be.rejected;
-      await (new Injector().get(null)).should.be.rejected;
-      await (new Injector().get(undefined)).should.be.rejected;
-      await (new Injector().get(Symbol('foo'))).should.be.rejected;
-      await (new Injector().get({})).should.be.rejected;
+      await checkFunctionOrToken('get');
     });
   });
 
@@ -201,13 +205,7 @@ describe('Injector', () => {
     });
 
     it('Should reject if provided parameter is not a function', async () => {
-      await (new Injector().create(true)).should.be.rejected;
-      await (new Injector().create('foo')).should.be.rejected;
-      await (new Injector().create(123)).should.be.rejected;
-      await (new Injector().create(null)).should.be.rejected;
-      await (new Injector().create(undefined)).should.be.rejected;
-      await (new Injector().create(Symbol('foo'))).should.be.rejected;
-      await (new Injector().create({})).should.be.rejected;
+      await checkFunctionOrToken('create');
     });
   });
 });
